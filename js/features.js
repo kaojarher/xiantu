@@ -239,15 +239,24 @@ const _render2=render;render=function(){if(st&&st[ai]&&AREAS[ai].ty=='town'&&!st
  * 數量存在 mats.ret（隨存檔保存；舊存檔沒有此欄位時視為 0）。
  * 取得：妙手丹藥房購買、煉丹爐（5 靈石碎片）、木箱 12% 掉落、開局 1 張。
  * 使用：☰ 儲物袋「使用歸鄉符」、方向鍵旁 🧧 按鈕。戰鬥中與對話中不可使用。 */
-const townOf=i=>{const A=AREAS[i];return A.ty=='town'?i:(A.par==null?0:A.par)};
+function townOf(i){const A=AREAS[i];return A.ty=='town'?i:(A.par==null?0:A.par)}   /* function 宣告會被提升：即使本檔前面某行載入時出錯，歸鄉符仍可用 */
 function useReturn(){
  if(cur){say('🧧 戰鬥中無法使用歸鄉符');return render()}
  if(busy){say('🧧 請先關閉對話視窗再使用歸鄉符');return render()}
  if(AREAS[ai].ty=='town'){say('🧧 你已經在村莊裡了');return render()}
  if((mats.ret|0)<1){say('🧧 沒有歸鄉符了（丹藥房、煉丹爐或木箱可取得）');return render()}
- const to=townOf(ai);mats.ret--;busy=true;
- say(`🧧 催動歸鄉符，光華包裹全隊，返回「${AREAS[to].n}」`);render();
+ let to;
+ try{to=townOf(ai);if(!AREAS[to]||AREAS[to].ty!='town')to=0}catch(e){to=0}
+ mats.ret--;busy=true;
+ say(`🧧 催動歸鄉符，光華包裹全隊，返回「${AREAS[to].n}」`);
+ try{render()}catch(e){console.warn('useReturn render',e)}
  try{FX.play('warp',{A:()=>[view.clientWidth/2,view.clientHeight*.8],B:()=>[view.clientWidth/2,view.clientHeight*.8],hit:0})}catch(e){}
- setTimeout(()=>{busy=false;enter(to)},850)}
+ setTimeout(()=>{
+  busy=false;
+  try{enter(to)}
+  catch(e){                                   /* 傳送失敗：退還符、解除鎖定，並把錯誤顯示在玉簡裡方便回報 */
+   mats.ret++;cur=null;busy=false;console.error('歸鄉符傳送失敗',e);
+   try{say('⚠️ 歸鄉符傳送失敗（已退還）：'+(e&&e.message||e));render()}catch(_){}}
+ },850)}
 if(!$('#rt')){const b=document.createElement('button');b.id='rt';b.textContent='🧧';b.title='歸鄉符：回到最近的村莊';$('#pt').after(b)}   /* 舊版 index.html 沒有按鈕時自動補上 */
 $('#rt').onclick=ev=>{ev.stopPropagation();useReturn()};
