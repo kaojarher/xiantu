@@ -234,3 +234,20 @@ const _render2=render;render=function(){if(st&&st[ai]&&AREAS[ai].ty=='town'&&!st
 /* 修仙城鎮不放路障：舊存檔的 🚧 改成樹木；裝備圖示 🚧 顯示為 🪞 */
 (function(){const _SI=SI;SI=function(e,...a){return _SI(typeof e=='string'&&e.replace(/\uFE0F/g,'')=='🚧'?'🪞':e,...a)};
  const _rd=render;render=function(){const S=st&&st[ai];if(S&&S.bd&&!S.__nb){S.__nb=1;let ch=false;for(const k in S.bd){if(S.bd[k].e=='🚧'){const[x,y]=k.split(',').map(Number);S.bd[k]={e:TREES[(x*7+y*3)%TREES.length],z:1.3};ch=true}}if(ch)build()}_rd()}})();
+
+/* items.js — 歸鄉符：脫離戰鬥外的任何地點，傳送回最近的村莊
+ * 數量存在 mats.ret（隨存檔保存；舊存檔沒有此欄位時視為 0）。
+ * 取得：妙手丹藥房購買、煉丹爐（5 靈石碎片）、木箱 12% 掉落、開局 1 張。
+ * 使用：☰ 儲物袋「使用歸鄉符」、方向鍵旁 🧧 按鈕。戰鬥中與對話中不可使用。 */
+const townOf=i=>{const A=AREAS[i];return A.ty=='town'?i:(A.par==null?0:A.par)};
+function useReturn(){
+ if(cur){say('🧧 戰鬥中無法使用歸鄉符');return render()}
+ if(busy){say('🧧 請先關閉對話視窗再使用歸鄉符');return render()}
+ if(AREAS[ai].ty=='town'){say('🧧 你已經在村莊裡了');return render()}
+ if((mats.ret|0)<1){say('🧧 沒有歸鄉符了（丹藥房、煉丹爐或木箱可取得）');return render()}
+ const to=townOf(ai);mats.ret--;busy=true;
+ say(`🧧 催動歸鄉符，光華包裹全隊，返回「${AREAS[to].n}」`);render();
+ try{FX.play('warp',{A:()=>[view.clientWidth/2,view.clientHeight*.8],B:()=>[view.clientWidth/2,view.clientHeight*.8],hit:0})}catch(e){}
+ setTimeout(()=>{busy=false;enter(to)},850)}
+if(!$('#rt')){const b=document.createElement('button');b.id='rt';b.textContent='🧧';b.title='歸鄉符：回到最近的村莊';$('#pt').after(b)}   /* 舊版 index.html 沒有按鈕時自動補上 */
+$('#rt').onclick=ev=>{ev.stopPropagation();useReturn()};

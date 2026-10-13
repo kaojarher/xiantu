@@ -3,12 +3,12 @@ const TH={
  town:{wl:'🧱',wc:'#7a6a58',fc:'#8c7a62',fg:'#a9b8a0'},
  waste:{wl:'🌳',wc:'#3a5a3a',fc:'#2d4a2d',fg:'#8ab886'},
  swamp:{wl:'🍄',wc:'#4b5a2e',fc:'#3a4a1e',fg:'#8aaa3a'},
- ruin:{wl:'🪨',wc:'#59544c',fc:'#3a3732',fg:'#6e7a78'},
+ ruin:{wl:'🗿',wc:'#59544c',fc:'#3a3732',fg:'#6e7a78'},
  desert:{wl:'🪨',wc:'#c9a15a',fc:'#e3c27f',fg:'#f0d9a0'},
  cave:{wl:'🪨',wc:'#4a4038',fc:'#2c2622',fg:'#100e0c'},
  vault:{wl:'⛩️',wc:'#3a4d5c',fc:'#20303a',fg:'#08121a'},
  sewer:{wl:'🧱',wc:'#3d5148',fc:'#243229',fg:'#0d1411'},
- mutant:{wl:'🧱',wc:'#5a2a1c',fc:'#2a1510',fg:'#140806'},
+ mutant:{wl:'☠️',wc:'#5a2a1c',fc:'#2a1510',fg:'#140806'},
  citadel:{wl:'🔥',wc:'#4a1e1e',fc:'#2a1010',fg:'#140606'}};
 const mkLoc=o=>Object.assign({w:34,h:26,tt:0},TH[o.th],o);
 const AREAS=[
@@ -257,9 +257,9 @@ const ROLES=[
  {e:'💂',nm:'護衛',v:'npc',ln:['鎮守重地，閒人莫入。最近妖魔作亂，諸位多加小心。','夜裡我都不敢打盹，聽說有黑風寨強盜摸進鎮裡。','要出城的話，記得先備足回春丹。']},
  {e:'🤠',nm:'散修',v:'npc',ln:['我遊歷天下，只想找一把順手的法寶飛劍。','聽說萬寶城的天機閣能打聽到仙界大事，真想去看看。','在修仙界活下去，靠的不只是法力，還有氣運。']},
  {e:'🧑‍🔧',nm:'煉器師',v:'npc2',ln:['噓……我只是路過，別盯著我的法寶鼎爐。','沒有宗門庇護，什麼法寶都得自己動手煉。','想買情報？先看看你的靈石袋夠不夠。']},
- {e:'🧑‍🚒',nm:'🌐 修士 蜀山道人',v:'npc',ln:['有人要組隊去鎮妖塔嗎？','（模擬玩家）我剛升到 練氣5層，終於買得起紫郢劍。']},
- {e:'🧑‍🎓',nm:'🌐 修士 丹尊者',v:'npc',ln:['赤龍好痛，建議多帶回春丹。','（模擬玩家）護法法相真的很帥，記得先把聚靈法陣充滿。']},
- {e:'🧑‍🎤',nm:'🌐 修士 小藍仙',v:'npc2',ln:['青竹鎮的符咒好貴……','我昨天一個人清完黑風寨！']}];
+ {e:'🧑‍🚒',nm:'🌐 修士 蜀山道人',v:'npc',ln:['（模擬玩家）有人要組隊去鎮妖塔嗎？','（模擬玩家）我剛升到 練氣5層，終於買得起紫郢劍。']},
+ {e:'🧑‍🎓',nm:'🌐 修士 丹尊者',v:'npc',ln:['（模擬玩家）赤龍好痛，建議多帶回春丹。','（模擬玩家）護法法相真的很帥，記得先把聚靈法陣充滿。']},
+ {e:'🧑‍🎤',nm:'🌐 修士 小藍仙',v:'npc2',ln:['（模擬玩家）青竹鎮的符咒好貴……','（模擬玩家）我昨天一個人清完黑風寨！']}];
 function genTown(i){const A=AREAS[i],W=A.w,H=A.h,ents={},bd={},sx0=W>>1,sy0=H-3,
  g=Array.from({length:H},(_,y)=>Array.from({length:W},(_,x)=>x==0||y<=2||x==W-1||y==H-1?1:0)),
  hse=(x,y)=>({e:HOUSES[Math.floor(hs(x,y,5+i)*HOUSES.length)],z:1.15+hs(x,y,6)*.2}),
@@ -514,7 +514,7 @@ function loadGame(txt){let o;try{o=JSON.parse(txt,(k,v)=>v&&typeof v=='object'&&
   if(o.game!='仙途遠征'||!Array.isArray(d.party)||!d.party.length||!Array.isArray(d.st)||!d.st[d.ai]||!AREAS[d.ai]||!Array.isArray(d.logs))throw 0}
  catch(e){say('❌ 存檔格式不正確，讀取失敗');render();return}
  ({party,gold,pot,xp,lv,ai,st,logs,done,has,qs,visited,hires,bless,day,SHOP,WITCH,oracle,fal,wl}=o.d);
- bag=o.d.bag||[];spc=o.d.spc||[4,4,4,4,4,4,4];perks=o.d.perks||[];pp=o.d.pp||0;mats=o.d.mats||{scrap:6,core:0,ret:1};BS=o.d.BS||{pool:{scrap:0,food:0,water:0}};if(o.d.MX){MX=o.d.MX;if(MX.area)AREAS[MS]=MX.area}else MX=mxNew();lid=o.d.lid||logs.length;party.forEach(m=>{m.it=m.it||{};m.ic=m.ic||{}});
+ bag=o.d.bag||[];spc=o.d.spc||[4,4,4,4,4,4,4];perks=o.d.perks||[];pp=o.d.pp||0;mats=o.d.mats||{scrap:6,core:0,ret:1};if(mats.ret==null)mats.ret=1;BS=o.d.BS||{pool:{scrap:0,food:0,water:0}};if(o.d.MX){MX=o.d.MX;if(MX.area)AREAS[MS]=MX.area}else MX=mxNew();lid=o.d.lid||logs.length;party.forEach(m=>{m.it=m.it||{};m.ic=m.ic||{}});
  cur=null;endUI();busy=false;$('#ov').style.display='none';build();say('📂 已讀取存檔');setTab(tab);render()}
 function newGame(){ui('🔁','重新輪迴','確定要重新開始嗎？未存檔的進度將會消失。',[{t:'是，重新輪迴',f:()=>{closeUI();init()}}])}
 function potion(){if(busy)return;if(pot<1){say('沒有回春丹了');return render()}
