@@ -14,7 +14,7 @@
  <div id="pad">
   <div id="js"><button data-d="f" data-abs="dn" style="grid-area:1/2" title="往北">▲</button><button data-d="tl" data-abs="dw" style="grid-area:2/1" title="往西">◀</button><button id="cm" style="grid-area:2/2" title="切換操作模式">🧭</button><button data-d="tr" data-abs="de" style="grid-area:2/3" title="往東">▶</button><button data-d="b" data-abs="ds" style="grid-area:3/2" title="往南">▼</button></div>
   <div id="pbh"></div>
-  <div id="pb"><button data-a="tl">↶</button><button data-a="tr">↷</button><button id="pt">💊</button><button id="mn" onclick="openSheet()" title="卷軸／儲物袋／修行">☰</button></div>
+  <div id="pb"><button data-a="tl">↶</button><button data-a="tr">↷</button><button id="pt">💊</button><button id="rt" title="歸鄉符：回到最近的村莊">🧧</button><button id="mn" onclick="openSheet()" title="卷軸／儲物袋／修行">☰</button></div>
  </div>
  </div>
  <div id="side" class="fr"><div class="top"><canvas id="mm" width="160" height="160"></canvas><div class="st" id="st"></div></div>
@@ -34,38 +34,5 @@
 <script src="js/fx-lib.js"></script>
 <script src="js/fx-bridge.js"></script>
 <script src="js/main.js"></script>
-<style>
-#coffee-box{margin:0 0 10px;padding:10px;text-align:center;border:1px solid rgba(212,170,90,.45);border-radius:8px;background:rgba(212,170,90,.08)}
-#coffee-box a{display:inline-block;padding:9px 18px;border-radius:999px;background:linear-gradient(135deg,#e8b866,#c98a3a);color:#2b1a05;font-weight:700;font-size:14px;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.35)}
-#coffee-box a:active{transform:scale(.97)}
-#coffee-box small{display:block;margin-top:6px;opacity:.7;font-size:11px}
-</style>
-<script>
-/* 請創作者喝一杯拿鐵：固定顯示在「💾 存檔」分頁最上方 */
-(function(){
- var URL='https://api.payuni.com.tw/api/uop/receive_info/2/3/U066100352/Gpnnwn6NWW9WIoPhS8YG9';
- function sysOn(){var b=document.querySelector('.tabs button[data-t="sys"]');return b&&b.classList.contains('on')}
- function ensure(){
-  var tp=document.getElementById('tp');if(!tp)return;
-  var box=document.getElementById('coffee-box');
-  if(!sysOn()){if(box)box.remove();return}
-  if(box&&box.parentNode===tp&&tp.firstChild===box)return;
-  if(!box){
-   box=document.createElement('div');box.id='coffee-box';
-   box.innerHTML='<a href="'+URL+'" target="_blank" rel="noopener noreferrer">☕ 請創作者喝一杯拿鐵</a><small>喜歡這款遊戲嗎？你的支持是我持續更新的動力 🙏</small>';
-  }
-  tp.insertBefore(box,tp.firstChild);
- }
- function start(){
-  var tp=document.getElementById('tp'),tabs=document.querySelector('.tabs');
-  if(!tp||!tabs)return;
-  var mo=new MutationObserver(ensure);
-  mo.observe(tp,{childList:true});
-  mo.observe(tabs,{attributes:true,subtree:true,attributeFilter:['class']});
-  ensure();
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
-})();
-</script>
 </body>
 </html>
